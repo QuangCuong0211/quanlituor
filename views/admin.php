@@ -1,21 +1,12 @@
-<?php
-// ----------- GIẢ LẬP DỮ LIỆU TOUR (thay bằng database sau) -----------
-$tours = [
-    ["id" => 1, "name" => "Tour Đà Nẵng 3N2Đ", "price" => 3500000],
-    ["id" => 2, "name" => "Tour Đà Lạt 2N1Đ", "price" => 2500000],
-    ["id" => 3, "name" => "Tour Nha Trang 4N3Đ", "price" => 4200000],
-];
-?>
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Admin - Quản Lý Tour</title>
+    <title>Admin Dashboard</title>
     <style>
         body {
             margin: 0;
-            font-family: Arial;
+            font-family: Arial, sans-serif;
             background: #f4f4f4;
         }
 
@@ -26,8 +17,8 @@ $tours = [
             background: #1E293B;
             color: #fff;
             position: fixed;
-            left: 0;
             top: 0;
+            left: 0;
             padding-top: 20px;
         }
         .sidebar h2 {
@@ -44,7 +35,7 @@ $tours = [
             background: #334155;
         }
 
-        /* CONTENT */
+        /* MAIN CONTENT */
         .content {
             margin-left: 220px;
             padding: 20px;
@@ -52,36 +43,41 @@ $tours = [
 
         .card {
             background: #fff;
-            padding: 18px;
             border-radius: 8px;
-            box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 12px;
+        .card h3 {
+            margin-top: 0;
+            color: #1e293b;
         }
 
-        th, td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
+        .stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
-        th {
-            background: #eaeaea;
-        }
-
-        .btn {
-            padding: 6px 10px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 14px;
+        .stat-box {
+            flex: 1;
+            min-width: 200px;
+            background: #10b981;
             color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
         }
-        .btn-edit { background: #0ea5e9; }
-        .btn-delete { background: #ef4444; }
-        .btn-add { background: #10b981; padding: 8px 15px; display: inline-block; margin-bottom: 10px; }
+
+        .stat-box h2 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .stat-box p {
+            margin: 5px 0 0 0;
+        }
     </style>
 </head>
 <body>
@@ -89,8 +85,8 @@ $tours = [
 <!-- SIDEBAR -->
 <div class="sidebar">
     <h2>Admin</h2>
-    <a href="#">Dashboard</a>
-    <a href="#">Quản lý Tour</a>
+    <a href="?act=admin">Dashboard</a>
+    <a href="?act=tour-list">Quản lý Tour</a>
     <a href="#">Quản lý Khách hàng</a>
     <a href="#">Quản lý Đặt Tour</a>
     <a href="#">Báo cáo</a>
@@ -98,31 +94,32 @@ $tours = [
 
 <!-- MAIN CONTENT -->
 <div class="content">
-    <h1>Quản Lý Tour Du Lịch</h1>
+    <h1>Dashboard</h1>
 
-    <a href="#" class="btn btn-add">+ Thêm Tour</a>
+    <!-- STATISTICS -->
+    <div class="stats">
+        <div class="stat-box">
+            <h2>15</h2>
+            <p>Tours</p>
+        </div>
+        <div class="stat-box">
+            <h2>120</h2>
+            <p>Khách hàng</p>
+        </div>
+        <div class="stat-box">
+            <h2>45</h2>
+            <p>Đơn đặt tour</p>
+        </div>
+        <div class="stat-box">
+            <h2>5</h2>
+            <p>Báo cáo mới</p>
+        </div>
+    </div>
 
+    <!-- WELCOME CARD -->
     <div class="card">
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Tên Tour</th>
-                <th>Giá</th>
-                <th>Hành động</th>
-            </tr>
-
-            <?php foreach ($tours as $tour): ?>
-            <tr>
-                <td><?= $tour["id"] ?></td>
-                <td><?= $tour["name"] ?></td>
-                <td><?= number_format($tour["price"]) ?>đ</td>
-                <td>
-                    <a href="#" class="btn btn-edit">Sửa</a>
-                    <a href="#" class="btn btn-delete" onclick="return confirm('Xóa tour này?')">Xóa</a>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
+        <h3>Chào mừng đến trang quản trị!</h3>
+        <p>Tại đây bạn có thể quản lý tour, khách hàng, đơn đặt tour và xem báo cáo thống kê.</p>
     </div>
 </div>
 
