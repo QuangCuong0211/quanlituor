@@ -12,3 +12,4 @@ define('DB_PASSWORD', '');
 define('DB_NAME'    , 'quanlitour');  // Tên database
 
 define('PATH_ROOT'    , __DIR__ . '/../');
+//ad
