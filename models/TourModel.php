@@ -1,5 +1,5 @@
 <?php
-class ProductModel
+class TourModel
 {
     public $conn;
 

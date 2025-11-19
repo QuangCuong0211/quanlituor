@@ -1,106 +1,75 @@
-<?php
-// views/tour/edit.php
-
-require_once __DIR__ . '/../../commons/env.php';
-
-$conn = new mysqli(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME, DB_PORT);
-
-if ($conn->connect_error) {
-    die("Kết nối thất bại: " . $conn->connect_error);
-}
-
-$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-if ($id <= 0) {
-    die("ID không hợp lệ!");
-}
-
-$stmt = $conn->prepare("SELECT id, name, description, price FROM tours WHERE id = ?");
-if (!$stmt) {
-    die("Lỗi prepare: " . $conn->error);
-}
-
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$result = $stmt->get_result();
-$tour = $result->fetch_assoc();
-$stmt->close();
-$conn->close();
-
-if (!$tour) {
-    die("Tour không tồn tại!");
-}
-
-$msg   = $_GET['msg']   ?? '';
-$error = $_GET['error'] ?? '';
-?>
+<!-- views/tour/edit.php -->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Sửa Tour</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Sửa tour</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body { background:#f3f4f6; }
+        .card-shadow { box-shadow:0 10px 25px rgba(0,0,0,0.06); border-radius:18px; }
+    </style>
 </head>
-<body>
+<body class="py-4">
+<div class="container" style="max-width: 900px;">
 
-<div class="container mt-4">
-    <h2>Sửa Tour</h2>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="mb-1">Sửa tour</h2>
+            <div class="text-muted">Chỉnh sửa thông tin tour</div>
+        </div>
+        <a href="?act=tour-list" class="btn btn-outline-secondary">
+            ← Danh sách tour
+        </a>
+    </div>
 
-    <?php if ($msg): ?>
-        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-            <?= htmlspecialchars($msg) ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+    <?php if (!empty($_GET['msg'])): ?>
+        <div class="alert alert-success mb-3">
+            <?= htmlspecialchars($_GET['msg']) ?>
         </div>
     <?php endif; ?>
 
-    <?php if ($error): ?>
-        <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-            <?= htmlspecialchars($error) ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+    <?php if (!empty($_GET['error'])): ?>
+        <div class="alert alert-danger mb-3">
+            <?= htmlspecialchars($_GET['error']) ?>
         </div>
     <?php endif; ?>
 
-    <form action="?act=tour-update" method="post" class="mt-3">
-        <input type="hidden" name="id" value="<?= htmlspecialchars($tour['id']) ?>">
+    <div class="card card-shadow border-0">
+        <div class="card-body p-4">
 
-        <div class="mb-3">
-            <label class="form-label">Tên Tour</label>
-            <input
-                type="text"
-                name="name"
-                class="form-control"
-                value="<?= htmlspecialchars($tour['name']) ?>"
-                required
-            >
+            <form action="?act=tour-update" method="post" class="row g-3">
+
+                <input type="hidden" name="id" value="<?= htmlspecialchars($tour['id']) ?>">
+
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Tên tour</label>
+                    <input type="text" name="name" class="form-control"
+                           value="<?= htmlspecialchars($tour['name']) ?>" required>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label fw-semibold">Mô tả</label>
+                    <textarea name="desc" class="form-control" rows="4" required><?= htmlspecialchars($tour['description']) ?></textarea>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Giá tour (1 người lớn)</label>
+                    <input type="number" name="price" class="form-control"
+                           min="0"
+                           value="<?= htmlspecialchars($tour['price']) ?>" required>
+                </div>
+
+                <div class="col-12 d-flex justify-content-end mt-3">
+                    <a href="?act=tour-list" class="btn btn-outline-secondary me-2">Hủy</a>
+                    <button class="btn btn-primary">Cập nhật</button>
+                </div>
+            </form>
+
         </div>
+    </div>
 
-        <div class="mb-3">
-            <label class="form-label">Mô tả</label>
-            <textarea
-                name="desc"
-                class="form-control"
-                rows="4"
-                required
-            ><?= htmlspecialchars($tour['description']) ?></textarea>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Giá Tour</label>
-            <input
-                type="number"
-                name="price"
-                class="form-control"
-                value="<?= htmlspecialchars($tour['price']) ?>"
-                min="0"
-                required
-            >
-        </div>
-
-        <button class="btn btn-success">Cập nhật</button>
-        <a href="?act=tour-list" class="btn btn-secondary">Quay lại</a>
-    </form>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

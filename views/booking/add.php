@@ -1,88 +1,131 @@
-<!-- views/booking/add.php -->
 <?php
-$errors = $_SESSION['errors'] ?? [];
-$old    = $_SESSION['old'] ?? [];
-unset($_SESSION['errors'], $_SESSION['old']);
+$old = $_SESSION['old'] ?? [];
+unset($_SESSION['old']);
 ?>
-<!DOCTYPE html>
-<html lang="vi">
+<!doctype html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Thêm Booking</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+<meta charset="utf-8">
+<title>Thêm Booking</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="p-4">
-<div class="container">
-    <h2 class="mb-3">Thêm booking mới</h2>
 
-    <?php if (!empty($errors)): ?>
+<body class="p-4">
+<div class="container" style="max-width:900px">
+
+    <div class="d-flex justify-content-between mb-3">
+        <h2>Thêm booking mới</h2>
+        <a class="btn btn-outline-secondary" href="?act=booking-list">← Danh sách</a>
+    </div>
+
+    <?php if (!empty($_SESSION['errors'])): ?>
         <div class="alert alert-danger">
-            <ul class="mb-0">
-                <?php foreach ($errors as $err): ?>
-                    <li><?= $err; ?></li>
-                <?php endforeach; ?>
-            </ul>
+            <?php foreach($_SESSION['errors'] as $e): ?>
+                <div>- <?= htmlspecialchars($e) ?></div>
+            <?php endforeach; unset($_SESSION['errors']); ?>
         </div>
     <?php endif; ?>
 
-    <form action="?act=booking-save" method="post">
-        <div class="mb-3">
-            <label class="form-label">Tên khách hàng</label>
-            <input type="text" name="customer_name" class="form-control"
-                   value="<?= $old['customer_name'] ?? ''; ?>">
+    <form method="post" action="?act=booking-save" class="row g-3 card p-3">
+
+        <div class="col-md-6">
+            <label>Tên khách</label>
+            <input name="customer_name" class="form-control" value="<?= htmlspecialchars($old['customer_name'] ?? '') ?>">
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Số điện thoại</label>
-            <input type="text" name="phone" class="form-control"
-                   value="<?= $old['phone'] ?? ''; ?>">
+        <div class="col-md-6">
+            <label>Tour</label>
+            <select name="tour_id" id="tour_select" class="form-control">
+                <option value="">-- Chọn tour --</option>
+                <?php foreach($tours as $t): ?>
+                    <option 
+                        value="<?= $t['id'] ?>"
+                        data-price="<?= $t['price'] ?>"
+                        data-price-child="<?= $t['price_child'] ?? 0 ?>"
+                    >
+                        <?= htmlspecialchars($t['name']) ?> - <?= number_format($t['price']) ?> đ
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input type="email" name="email" class="form-control"
-                   value="<?= $old['email'] ?? ''; ?>">
+        <div class="col-md-6">
+            <label>Phone</label>
+            <input name="phone" class="form-control" value="<?= htmlspecialchars($old['phone'] ?? '') ?>">
         </div>
 
-        <div class="row">
-            <div class="mb-3 col-md-4">
-                <label class="form-label">Người lớn</label>
-                <input type="number" name="adult" class="form-control"
-                       value="<?= $old['adult'] ?? 1; ?>" min="1">
-            </div>
-            <div class="mb-3 col-md-4">
-                <label class="form-label">Trẻ em</label>
-                <input type="number" name="child" class="form-control"
-                       value="<?= $old['child'] ?? 0; ?>" min="0">
-            </div>
-            <div class="mb-3 col-md-4">
-                <label class="form-label">Tổng tiền (VNĐ)</label>
-                <input type="number" name="total_price" class="form-control"
-                       value="<?= $old['total_price'] ?? 0; ?>" min="0" step="1000">
-            </div>
+        <div class="col-md-6">
+            <label>Email</label>
+            <input name="email" class="form-control" value="<?= htmlspecialchars($old['email'] ?? '') ?>">
         </div>
 
-        <div class="row">
-            <div class="mb-3 col-md-6">
-                <label class="form-label">Ngày bắt đầu</label>
-                <input type="date" name="start_date" class="form-control"
-                       value="<?= $old['start_date'] ?? ''; ?>">
-            </div>
-            <div class="mb-3 col-md-6">
-                <label class="form-label">Ngày kết thúc</label>
-                <input type="date" name="end_date" class="form-control"
-                       value="<?= $old['end_date'] ?? ''; ?>">
-            </div>
+        <div class="col-md-3">
+            <label>Người lớn</label>
+            <input type="number" name="adult" id="adult" class="form-control" value="<?= $old['adult'] ?? 1 ?>" min="1">
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Ghi chú</label>
-            <textarea name="note" class="form-control" rows="3"><?= $old['note'] ?? ''; ?></textarea>
+        <div class="col-md-3">
+            <label>Trẻ em</label>
+            <input type="number" name="child" id="child" class="form-control" value="<?= $old['child'] ?? 0 ?>" min="0">
         </div>
 
-        <button type="submit" class="btn btn-success">Lưu</button>
-        <a href="?act=booking-list" class="btn btn-secondary">Quay lại</a>
+        <div class="col-md-4">
+            <label>Giá tour (1 khách)</label>
+            <input type="number" id="price" name="price" class="form-control" value="<?= $old['price'] ?? 0 ?>">
+        </div>
+
+        <div class="col-md-8">
+            <label>Tổng tiền</label>
+            <input readonly name="total_price" id="total_price" class="form-control" value="<?= $old['total_price'] ?? 0 ?>">
+        </div>
+
+        <div class="col-md-6">
+            <label>Ngày bắt đầu</label>
+            <input type="date" name="start_date" class="form-control" value="<?= $old['start_date'] ?? '' ?>">
+        </div>
+
+        <div class="col-md-6">
+            <label>Ngày kết thúc</label>
+            <input type="date" name="end_date" class="form-control" value="<?= $old['end_date'] ?? '' ?>">
+        </div>
+
+        <div class="col-12">
+            <label>Ghi chú</label>
+            <textarea name="note" class="form-control"><?= htmlspecialchars($old['note'] ?? '') ?></textarea>
+        </div>
+
+        <div class="col-12 text-end">
+            <a class="btn btn-secondary" href="?act=booking-list">Hủy</a>
+            <button class="btn btn-primary">Lưu booking</button>
+        </div>
+
     </form>
 </div>
+
+<script>
+function calcTotal() {
+    const adult = +document.getElementById('adult').value || 0;
+    const child = +document.getElementById('child').value || 0;
+    const price = +document.getElementById('price').value || 0;
+
+    const total = adult * price + child * (price * 0.7); // trẻ em 70%
+    document.getElementById('total_price').value = Math.round(total);
+}
+
+// khi chọn tour → cập nhật giá tour
+document.getElementById('tour_select').addEventListener('change', function() {
+    const p = this.options[this.selectedIndex].dataset.price || 0;
+    document.getElementById('price').value = p;
+    calcTotal();
+});
+
+// khi thay đổi số lượng
+['adult','child','price'].forEach(id =>
+    document.getElementById(id).addEventListener('input', calcTotal)
+);
+
+calcTotal();
+</script>
+
 </body>
 </html>

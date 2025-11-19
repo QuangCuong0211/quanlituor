@@ -6,35 +6,36 @@ require_once './commons/database.php';   // << tạo $conn
 require_once './commons/function.php';
 
 // Models
-require_once './models/ProductModel.php';
+require_once './models/TourModel.php';
 require_once './models/BookingModel.php';
 
 // Controllers
-require_once './controllers/ProductController.php';
+require_once './controllers/TourController.php';
 require_once './controllers/BookingController.php';
 
 $act = $_GET['act'] ?? '/';
 
-$productController = new ProductController();
+$tourController = new TourController();
 $bookingController = new BookingController();
 
 $routes = [
-    '/'            => ['controller' => $productController, 'method' => 'Home'],
-    'admin'        => ['controller' => $productController, 'method' => 'Admin'],
+    '/'            => ['controller' => $tourController, 'method' => 'Home'],
+    'admin'        => ['controller' => $tourController, 'method' => 'Admin'],
 
-    'tour-list'    => ['controller' => $productController, 'method' => 'tourList'],
-    'tour-add'     => ['controller' => $productController, 'method' => 'tourAdd'],
-    'tour-save'    => ['controller' => $productController, 'method' => 'tourSave'],
-    'tour-edit'    => ['controller' => $productController, 'method' => 'tourEdit'],
-    'tour-update'  => ['controller' => $productController, 'method' => 'tourUpdate'],
-    'tour-delete'  => ['controller' => $productController, 'method' => 'tourDelete'],
+    'tour-list'    => ['controller' => $tourController, 'method' => 'tourList'],
+    'tour-add'     => ['controller' => $tourController, 'method' => 'tourAdd'],
+    'tour-save'    => ['controller' => $tourController, 'method' => 'tourSave'],
+    'tour-edit'    => ['controller' => $tourController, 'method' => 'tourEdit'],
+    'tour-update'  => ['controller' => $tourController, 'method' => 'tourUpdate'],
+    'tour-delete'  => ['controller' => $tourController, 'method' => 'tourDelete'],
 
-    'booking-list'   => ['controller' => $bookingController, 'method' => 'list'],
-    'booking-add'    => ['controller' => $bookingController, 'method' => 'add'],
-    'booking-save'   => ['controller' => $bookingController, 'method' => 'save'],
+    'booking-list'   => ['controller' => $bookingController, 'method' => 'index'],
+    'booking-add'    => ['controller' => $bookingController, 'method' => 'create'],
+    'booking-save'   => ['controller' => $bookingController, 'method' => 'store'],
     'booking-edit'   => ['controller' => $bookingController, 'method' => 'edit'],
     'booking-update' => ['controller' => $bookingController, 'method' => 'update'],
     'booking-delete' => ['controller' => $bookingController, 'method' => 'delete'],
+
 ];
 
 if (array_key_exists($act, $routes)) {
