@@ -10,7 +10,7 @@
 <div class="container mt-4">
     <h2>Thêm Tour Mới</h2>
 
-    <form action="?act=tour-save" method="post" class="mt-3">
+    <form action="?act=booking-save" method="post" class="mt-3">
 
         <div class="mb-3">
             <label class="form-label">Tên Tour</label>

@@ -1,39 +1,52 @@
 <?php
-require_once './commons/env.php';
-require_once './commons/function.php';
+session_start(); // NHỚ CÓ để dùng $_SESSION flash message
 
-// Controllers
-require_once './controllers/ProductController.php';
+require_once './commons/env.php';
+require_once './commons/database.php';   // << tạo $conn
+require_once './commons/function.php';
 
 // Models
 require_once './models/ProductModel.php';
+require_once './models/BookingModel.php';
+
+// Controllers
+require_once './controllers/ProductController.php';
+require_once './controllers/BookingController.php';
 
 $act = $_GET['act'] ?? '/';
 
-$controller = new ProductController();
+$productController = new ProductController();
+$bookingController = new BookingController();
 
-// Danh sách route rõ ràng (key = route, value = phương thức)
 $routes = [
-    '/'           => 'Home',
-    'admin'       => 'Admin',
+    '/'            => ['controller' => $productController, 'method' => 'Home'],
+    'admin'        => ['controller' => $productController, 'method' => 'Admin'],
 
-    // Tour CRUD
-    'tour-list'   => 'tourList',
-    'tour-add'    => 'tourAdd',
-    'tour-save'   => 'tourSave',
-    'tour-edit'   => 'tourEdit',
-    'tour-update' => 'tourUpdate',
-    'tour-delete' => 'tourDelete',
+    'tour-list'    => ['controller' => $productController, 'method' => 'tourList'],
+    'tour-add'     => ['controller' => $productController, 'method' => 'tourAdd'],
+    'tour-save'    => ['controller' => $productController, 'method' => 'tourSave'],
+    'tour-edit'    => ['controller' => $productController, 'method' => 'tourEdit'],
+    'tour-update'  => ['controller' => $productController, 'method' => 'tourUpdate'],
+    'tour-delete'  => ['controller' => $productController, 'method' => 'tourDelete'],
+
+    'booking-list'   => ['controller' => $bookingController, 'method' => 'list'],
+    'booking-add'    => ['controller' => $bookingController, 'method' => 'add'],
+    'booking-save'   => ['controller' => $bookingController, 'method' => 'save'],
+    'booking-edit'   => ['controller' => $bookingController, 'method' => 'edit'],
+    'booking-update' => ['controller' => $bookingController, 'method' => 'update'],
+    'booking-delete' => ['controller' => $bookingController, 'method' => 'delete'],
 ];
 
-// Kiểm tra route tồn tại
 if (array_key_exists($act, $routes)) {
-    $method = $routes[$act];
+    $route = $routes[$act];
+    $controller = $route['controller'];
+    $method = $route['method'];
 
-    // Gọi hàm Controller
-    $controller->$method();
-
+    if (method_exists($controller, $method)) {
+        $controller->$method();
+    } else {
+        echo "404 - Method không tồn tại!";
+    }
 } else {
-    // 404
     echo "404 - Không tìm thấy route!";
 }

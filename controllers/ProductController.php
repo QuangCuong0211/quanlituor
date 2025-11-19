@@ -36,6 +36,11 @@ class ProductController
     {
         require_once './views/tour/add.php';
     }
+    // Form thêm booking
+    public function bookingAdd()
+    {
+        require_once './views/booking/add.php';
+    }
 
     // Lưu tour mới
     public function tourSave()
