@@ -8,15 +8,18 @@ require_once './commons/function.php';
 // Models
 require_once './models/TourModel.php';
 require_once './models/BookingModel.php';
+require_once './models/CategoryModel.php';
 
 // Controllers
 require_once './controllers/TourController.php';
 require_once './controllers/BookingController.php';
+require_once './controllers/CategoryController.php';
 
 $act = $_GET['act'] ?? '/';
 
 $tourController = new TourController();
 $bookingController = new BookingController();
+$categoryController = new CategoryController();
 
 $routes = [
     '/'            => ['controller' => $tourController, 'method' => 'Home'],
@@ -35,6 +38,13 @@ $routes = [
     'booking-edit'   => ['controller' => $bookingController, 'method' => 'edit'],
     'booking-update' => ['controller' => $bookingController, 'method' => 'update'],
     'booking-delete' => ['controller' => $bookingController, 'method' => 'delete'],
+
+    'category-list'   => ['controller' => $categoryController, 'method' => 'categoryList'],
+    'category-add'    => ['controller' => $categoryController, 'method' => 'categoryAdd'],
+    'category-save'   => ['controller' => $categoryController, 'method' => 'categorySave'],
+    'category-edit'   => ['controller' => $categoryController, 'method' => 'categoryEdit'],
+    'category-update' => ['controller' => $categoryController, 'method' => 'categoryUpdate'],
+    'category-delete' => ['controller' => $categoryController, 'method' => 'categoryDelete'],
 
 ];
 
